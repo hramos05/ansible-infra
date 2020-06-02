@@ -1,1 +1,27 @@
 ---
+- name: Create VM from template
+  vmware_guest:
+    validate_certs: false
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    datacenter: XYZ
+    cluster: vSAN
+    folder: XYZ/vm/003 - Playground
+    name: "{{ vmname }}"
+    template: "{{ vmtemplate }}"
+    disk:
+      - size_gb: 75
+        type: thin
+        datastore: "{{ datastore }}"
+    networks:
+    - name: VLAN100 - INF
+      type: dhcp
+    wait_for_ip_address: true
+    wait_for_customization: true
+    state: present
+    force: yes
+    customization:
+        hostname: "{{ vmname }}"
+  register: newvm
+  delegate_to: localhost
