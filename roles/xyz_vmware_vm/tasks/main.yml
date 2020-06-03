@@ -5,7 +5,7 @@
     hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
     username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
     password: "{{ lookup('env', 'VMWARE_PASSWORD') or xyz_vmware_vm_vcenter_pass }}"
-    name: "{{ xyz_vmware_vm_name|upper }}"
+    name: "{{ xyz_vmware_vm_name | upper }}"
     datacenter: "{{ xyz_vmware_vm_datacenter }}"
     cluster: "{{ xyz_vmware_vm_cluster }}"
     folder: "{{ xyz_vmware_vm_folder }}"
@@ -18,14 +18,14 @@
       hotadd_memory: "{{ xyz_vmware_vm_hotadd_memory }}"
       memory_mb: "{{ xyz_vmware_vm_memory_mb }}"
     datastore: "{{ xyz_vmware_vm_datastore }}"
-    disk: "{{ xyz_vmware_vm_disk_os }}"
+    disk: "{{ xyz_vmware_vm_disks | selectattr('size_gb') | list }}"
     networks: "{{ xyz_vmware_vm_networks }}"
     wait_for_ip_address: "{{ xyz_vmware_wait_for_ip_address }}"
     wait_for_customization: "{{ xyz_vmware_wait_for_customization }}"
     state: "{{ xyz_vmware_vm_state }}"
     force: yes
     customization:
-      hostname: "{{ xyz_vmware_vm_name|upper }}"
+      hostname: "{{ xyz_vmware_vm_name | upper }}"
   register: new_vm
   delegate_to: localhost
 
@@ -47,10 +47,8 @@
 
 - name: "Update temp inventory with new host"
   add_host:
-    hostname: "{{ item.hw_name }}"
-    ansible_host: "{{ item.ipv4 }}"
+    hostname: "{{ new_vm_info['instance']['hw_name'] }}"
+    ansible_host: "{{ new_vm_info['instance']['ipv4'] }}"
     groups: "{{ 'windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'linux' }}"
-  with_items:
-    - "{{ new_vm_info['instance'] }}"
   when: not xyz_vmware_vm_destroy|bool
   delegate_to: localhost
