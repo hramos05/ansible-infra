@@ -26,8 +26,6 @@
     force: yes
     customization:
       hostname: "{{ xyz_vmware_vm_name | upper }}"
-  loop:
-
   register: new_vm
   delegate_to: localhost
 
