@@ -5,7 +5,7 @@
     hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
     username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
     password: "{{ lookup('env', 'VMWARE_PASSWORD') or xyz_vmware_vm_vcenter_pass }}"
-    name: "{{ xyz_vmware_vm_name }}"
+    name: "{{ xyz_vmware_vm_name|upper }}"
     datacenter: "{{ xyz_vmware_vm_datacenter }}"
     cluster: "{{ xyz_vmware_vm_cluster }}"
     folder: "{{ xyz_vmware_vm_folder }}"
@@ -25,7 +25,7 @@
     state: "{{ xyz_vmware_vm_state }}"
     force: yes
     customization:
-        hostname: "{{ xyz_vmware_vm_name }}"
+        hostname: "{{ xyz_vmware_vm_name|upper }}"
   register: new_vm
   delegate_to: localhost
 
