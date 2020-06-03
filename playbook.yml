@@ -1,7 +1,0 @@
-- name: "Provision VM from template"
-  hosts: all
-  gather_facts: false
-  connection: local
-
-  roles:
-    - name: xyz_vmware_vm
