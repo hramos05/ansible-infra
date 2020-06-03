@@ -25,11 +25,11 @@
     state: "{{ xyz_vmware_vm_state }}"
     force: yes
     customization:
-        hostname: "{{ xyz_vmware_vm_name|upper }}"
+      hostname: "{{ xyz_vmware_vm_name|upper }}"
   register: new_vm
   delegate_to: localhost
 
-- name: Wait for the IPv4 address to be assigned
+- name: Waiting for the IPv4 address to be assigned
   community.vmware.vmware_guest_info:
     validate_certs: false
     hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
@@ -49,8 +49,8 @@
   add_host:
     hostname: "{{ item.hw_name }}"
     ansible_host: "{{ item.ipv4 }}"
-    groups: "phase"
+    groups: "{{ 'windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'linux' }}"
   with_items:
-    - "{{ new_vm['instance'] }}"
+    - "{{ new_vm_info['instance'] }}"
   when: not xyz_vmware_vm_destroy|bool
   delegate_to: localhost
