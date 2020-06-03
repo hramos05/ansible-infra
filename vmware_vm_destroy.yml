@@ -1,5 +1,5 @@
 ---
-- name: "Provision VM from template"
+- name: "Destroy temporary VMs"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -8,4 +8,4 @@
     - name: xyz.vmware
 
   roles:
-    - name: xyz.vmware.vm_provision
+    - name: xyz.vmware.vm_destroy

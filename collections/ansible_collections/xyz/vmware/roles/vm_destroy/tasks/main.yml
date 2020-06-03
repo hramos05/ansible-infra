@@ -1,0 +1,28 @@
+---
+- name: Get all the vms in temporary folder
+  community.vmware.vmware_vm_info:
+    validate_certs: false
+    hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
+    username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
+    password: "{{ lookup('env', 'VMWARE_PASSWORD') or xyz_vmware_vm_vcenter_pass }}"
+    folder: "{{ xyz_vmware_vm_datacenter }}/vm/{{ xyz_vmware_vm_folder }}"
+    vm_type: "all"
+  register: vm_info
+  delegate_to: localhost
+
+- name: Delete VMs
+  community.vmware.vmware_guest:
+    validate_certs: false
+    hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
+    username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
+    password: "{{ lookup('env', 'VMWARE_PASSWORD') or xyz_vmware_vm_vcenter_pass }}"
+    uuid: "{{ item['uuid'] }}"
+    datacenter: "{{ xyz_vmware_vm_datacenter }}"
+    cluster: "{{ xyz_vmware_vm_cluster }}"
+    folder: "{{ xyz_vmware_vm_folder }}"
+    state: "{{ xyz_vmware_vm_state }}"
+    force: "{{ xyz_vmware_vm_force }}"
+  delegate_to: localhost
+  with_items:
+    - "{{ vm_info['virtual_machines'] }}"
+
