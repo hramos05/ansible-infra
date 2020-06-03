@@ -1,0 +1,34 @@
+---
+- name: Create VM from template
+  vmware_guest:
+    validate_certs: false
+    hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
+    username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
+    password: "{{ lookup('env', 'VMWARE_PASSWORD') or xyz_vmware_vm_vcenter_pass }}"
+    name: "{{ xyz_vmware_vm_name }}"
+    datacenter: "{{ xyz_vmware_vm_datacenter }}"
+    cluster: "{{ xyz_vmware_vm_cluster }}"
+    folder: "{{ xyz_vmware_vm_folder }}"
+    template: "{{ xyz_vmware_vm_template }}"
+    hardware:
+      num_cpus: "{{ xyz_vmware_vm_num_cpus }}"
+      num_cpu_cores_per_socket: "{{ xyz_vmware_vm_num_cpu_cores_per_socket }}"
+      hotadd_cpu: "{{ xyz_vmware_vm_hotadd_cpu }}"
+      hotremove_cpu: "{{ xyz_vmware_vm_hotremove_cpu }}"
+      hotadd_memory: "{{ xyz_vmware_vm_hotadd_memory }}"
+      memory_mb: "{{ xyz_vmware_vm_memory_mb }}"
+    datastore: "{{ xyz_vmware_vm_datastore }}"
+    disk: "{{ xyz_vmware_vm_disk_os }}"
+    networks: "{{ xyz_vmware_vm_networks }}"
+    wait_for_ip_address: "{{ xyz_vmware_wait_for_ip_address }}"
+    wait_for_customization: "{{ xyz_vmware_wait_for_customization }}"
+    state: "{{ xyz_vmware_vm_state }}"
+    force: yes
+    customization:
+        hostname: "{{ xyz_vmware_vm_name }}"
+  register: new_vm
+  delegate_to: localhost
+
+
+- debug:
+    var: new_vm
