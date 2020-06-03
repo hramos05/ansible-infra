@@ -1,5 +1,6 @@
 ---
-xyz_vmware_vm_state: "present"
+xyz_vmware_vm_destroy: "false"
+xyz_vmware_vm_state: "{{ 'absent' if xyz_vmware_vm_destroy|bool else 'present' }}"
 xyz_vmware_vm_vcenter_server: "vcsa.int.xyzramos.com"
 xyz_vmware_vm_vcenter_user: "default"
 xyz_vmware_vm_vcenter_pass: "default"

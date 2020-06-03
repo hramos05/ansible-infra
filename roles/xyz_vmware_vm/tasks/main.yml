@@ -1,6 +1,6 @@
 ---
 - name: Create VM from template
-  vmware_guest:
+  community.vmware.vmware_guest:
     validate_certs: false
     hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
     username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
@@ -29,6 +29,14 @@
   register: new_vm
   delegate_to: localhost
 
-
 - debug:
     var: new_vm
+
+- name: "Update temp inventory with new host"
+  add_host:
+    hostname: "{{ item.hw_name }}"
+    ansible_host: "{{ item.ipv4 }}"
+    groups: "Phase 1"
+  with_items:
+    - "{{ new_vm['instance'] }}"
+  when: not xyz_vmware_vm_destroy

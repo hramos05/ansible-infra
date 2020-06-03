@@ -4,5 +4,8 @@
   gather_facts: false
   connection: local
 
+  collections:
+  - name: community.vmware
+
   roles:
     - name: xyz_vmware_vm
