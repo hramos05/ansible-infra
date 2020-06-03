@@ -19,8 +19,9 @@ xyz_vmware_wait_for_ip_address: "true"
 xyz_vmware_wait_for_customization: "true"
 xyz_vmware_vm_cdrom:
   - type: "client"
+xyz_vmware_vm_vlan: "VLAN100 - INF"
 xyz_vmware_vm_networks:
-  - name: "VLAN100 - INF"
+  - name: "{{ xyz_vmware_vm_vlan }}"
     type: "dhcp"
 xyz_vmware_vm_disk_os:
   - size_gb: "70"
