@@ -5,7 +5,7 @@
   connection: local
 
   collections:
-  - name: community.vmware
+    - name: xyz.vmware
 
   roles:
-    - name: xyz_vmware_vm
+    - xyz.vmware.vm
