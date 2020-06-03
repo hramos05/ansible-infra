@@ -29,14 +29,28 @@
   register: new_vm
   delegate_to: localhost
 
-- debug:
-    var: new_vm
+- name: Wait for the IPv4 address to be assigned
+  community.vmware.vmware_guest_info:
+    validate_certs: false
+    hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
+    username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
+    password: "{{ lookup('env', 'VMWARE_PASSWORD') or xyz_vmware_vm_vcenter_pass }}"
+    moid: "{{ new_vm['instance']['moid'] }}"
+    datacenter: "{{ xyz_vmware_vm_datacenter }}"
+    folder: "{{ xyz_vmware_vm_folder }}"
+  register: new_vm_info
+  when: not xyz_vmware_vm_destroy|bool
+  until: new_vm_info['instance']['ipv4'] is not none
+  retries: 30
+  delay: 15
+  delegate_to: localhost
 
 - name: "Update temp inventory with new host"
   add_host:
     hostname: "{{ item.hw_name }}"
     ansible_host: "{{ item.ipv4 }}"
-    groups: "Phase 1"
+    groups: "phase"
   with_items:
     - "{{ new_vm['instance'] }}"
   when: not xyz_vmware_vm_destroy|bool
+  delegate_to: localhost
