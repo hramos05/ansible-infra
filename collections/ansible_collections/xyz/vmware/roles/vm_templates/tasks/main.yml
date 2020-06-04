@@ -1,0 +1,4 @@
+---
+- name: Run Windows 2019 Builder
+  include_tasks: windows.yml
+  when: "'win-' in xyz_vmware_vm_templates_image | lower"

@@ -2,7 +2,6 @@
 - name: "Build VMware Packer Templates"
   hosts: localhost
   gather_facts: true
-  become: true
   connection: local
 
   collections:
@@ -10,5 +9,5 @@
     - xyz.vmware
 
   roles:
-    - xyz.packer.install
-  #   #- xyz.vmware.template_build
+    - { role: xyz.packer.install, become: true }
+    - xyz.vmware.vm_templates

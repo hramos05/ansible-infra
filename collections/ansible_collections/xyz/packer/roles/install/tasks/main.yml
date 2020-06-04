@@ -10,3 +10,11 @@
     dest: "{{ xyz_packer_install_bin_path }}"
     remote_src: true
     creates: "{{ xyz_packer_install_bin_path }}/packer"
+
+- name: Download and unarchive packer
+  unarchive:
+    src: "{{ xyz_packer_install_windows_update_provisioner }}"
+    dest: "{{ xyz_packer_install_bin_path }}"
+    remote_src: true
+    creates: "{{ xyz_packer_install_bin_path }}/packer-provisioner-windows-update"
+    mode: 0755
