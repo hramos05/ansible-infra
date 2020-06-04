@@ -1,8 +1,8 @@
 {
   "variables": {
-    "vcenter_server": "<< xyz_vmware_vm_templates_vcenter_server >>",
-    "vcenter_username": "<< xyz_vmware_vm_templates_vcenter_user >>",
-    "vcenter_password": "<< xyz_vmware_vm_templates_vcenter_pass >>",
+    "vcenter_server": "{% if lookup('env','VMWARE_HOST')|length %}<< lookup('env','VMWARE_HOST') >>{% else %}<< xyz_vmware_vm_templates_vcenter_server >>{% endif %}",
+    "vcenter_username": "{% if lookup('env','VMWARE_USER')|length %}<< lookup('env','VMWARE_USER') >>{% else %}<< xyz_vmware_vm_templates_vcenter_user >>{% endif %}",
+    "vcenter_password": "{% if lookup('env','VMWARE_PASSWORD')|length %}<< lookup('env','VMWARE_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_vcenter_pass>>{% endif %}",
     "vcenter_datastore": "<< xyz_vmware_vm_templates_datastore >>",
     "vcenter_folder": "<< xyz_vmware_vm_templates_folder >>",
     "vcenter_cluster": "<< xyz_vmware_vm_templates_cluster >>",
@@ -13,8 +13,8 @@
     "vm_disk_controller_type": "<< xyz_vmware_vm_templates_disk_controller_type >>",
     "vm_disk_size": "<< xyz_vmware_vm_templates_disk_os_size_mb >>",
     "vm_iso_path": "<< xyz_vmware_vm_templates_iso_path >>",
-    "winrm_username": "<< xyz_vmware_vm_templates_windows_local_vagrant_username >>",
-    "winrm_password": "<< xyz_vmware_vm_templates_windows_local_vagrant_password >>",
+    "winrm_username": "{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_username >>{% endif %}",
+    "winrm_password": "{% if lookup('env','VAGRANT_PASSWORD')|length %}<< lookup('env','VAGRANT_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_password >>{% endif %}",
     "vm_guest_id": "<< xyz_vmware_vm_templates_windows_guest_id >>",
     "vm_firmware": "efi",
     "server_info_path": "HKLM:\\SOFTWARE\\XYZ\\TemplateInfo"

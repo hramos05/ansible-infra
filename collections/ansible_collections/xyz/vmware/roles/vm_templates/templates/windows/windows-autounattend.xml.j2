@@ -63,7 +63,7 @@
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/NAME</Key>
                             <!-- Options: SERVERDATACENTER, SERVERDATACENTERCORE, SERVERSTANDARD, SERVERSTANDARDCORE -->
-                            <Value>Windows Server 2019 << xyz_vmware_vm_templates_windows_server_edition >></Value>
+                            <Value>Windows Server 2019 {% if 'core' in xyz_vmware_vm_templates_image|lower %}SERVERDATACENTERCORE{% else %}SERVERDATACENTER{% endif %}</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -121,29 +121,29 @@
             <!-- Create Vagrant Account -->
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value><< xyz_vmware_vm_templates_windows_local_admin_password >></Value>
+                    <Value>{% if lookup('env','LOCAL_ADMIN_PASSWORD')|length %}<< lookup('env','LOCAL_ADMIN_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_windows_local_admin_password >>{% endif %}</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value><< xyz_vmware_vm_templates_windows_local_vagrant_password >></Value>
+                            <Value>{% if lookup('env','VAGRANT_PASSWORD')|length %}<< lookup('env','VAGRANT_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_password >>{% endif %}</Value>
                             <PlainText>true</PlainText>
                         </Password>
                         <Group>Administrators</Group>
-                        <DisplayName><< xyz_vmware_vm_templates_windows_local_vagrant_username >></DisplayName>
-                        <Name><< xyz_vmware_vm_templates_windows_local_vagrant_username >></Name>
+                        <DisplayName>{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_username >>{% endif %}</DisplayName>
+                        <Name>{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_username >>{% endif %}</Name>
                         <Description>For Builds Only!</Description>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
             <AutoLogon>
                 <Password>
-                    <Value><< xyz_vmware_vm_templates_windows_local_vagrant_password >></Value>
+                    <Value>{% if lookup('env','VAGRANT_PASSWORD')|length %}<< lookup('env','VAGRANT_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_password >>{% endif %}</Value>
                     <PlainText>true</PlainText>
                 </Password>
                 <LogonCount>1</LogonCount>
-                <Username><< xyz_vmware_vm_templates_windows_local_vagrant_username >></Username>
+                <Username>{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_username >>{% endif %}</Username>
                 <Enabled>true</Enabled>
             </AutoLogon>
             <FirstLogonCommands>
@@ -156,7 +156,7 @@
                 <SynchronousCommand wcm:action="add">
                     <Order>2</Order>
                     <Description>Disable password expiration for Vagrant user</Description>
-                    <CommandLine>wmic useraccount where "name='<< xyz_vmware_vm_templates_windows_local_vagrant_username >>'" set PasswordExpires=FALSE</CommandLine>
+                    <CommandLine>wmic useraccount where "name='{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_username >>{% endif %}'" set PasswordExpires=FALSE</CommandLine>
                 </SynchronousCommand>
                 <!--
                     Disable AutoLogin and Configure WinRM For Ansible

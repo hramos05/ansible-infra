@@ -1,7 +1,7 @@
 ---
-xyz_vmware_vm_templates_vcenter_server: "{{ lookup('env', 'VMWARE_HOST') or 'vcsa.int.xyzramos.com' }}"
-xyz_vmware_vm_templates_vcenter_user: "{{ lookup('env', 'VMWARE_USER') or 'administrator@vsphere.local' }}"
-xyz_vmware_vm_templates_vcenter_pass: "{{ lookup('env', 'VMWARE_PASSWORD') or 'default' }}"
+xyz_vmware_vm_templates_vcenter_server: "vcsa.int.xyzramos.com"
+xyz_vmware_vm_templates_vcenter_user: "administrator@vsphere.local"
+xyz_vmware_vm_templates_vcenter_pass: "CHANGEME"
 xyz_vmware_vm_templates_datacenter: "XYZ"
 xyz_vmware_vm_templates_cluster: "vSAN"
 xyz_vmware_vm_templates_folder: "999 - Templates"

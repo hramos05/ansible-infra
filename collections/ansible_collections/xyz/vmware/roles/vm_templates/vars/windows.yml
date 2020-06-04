@@ -1,8 +1,8 @@
 ---
-xyz_vmware_vm_templates_windows_server_edition: "{{ 'SERVERDATACENTERCORE' if xyz_vmware_vm_templates_image is match('*CORE*') else 'SERVERDATACENTER' }}"
-xyz_vmware_vm_templates_windows_local_admin_password: "{{ lookup('env', 'LOCAL_ADMIN_PASSWORD') or 'CHANGEME' }}"
-xyz_vmware_vm_templates_windows_local_vagrant_username: "{{ lookup('env', 'VAGRANT_USER') or 'vagrant' }}"
-xyz_vmware_vm_templates_windows_local_vagrant_password: "{{ lookup('env', 'VAGRANT_PASSWORD') or 'vagrant' }}"
+xyz_vmware_vm_templates_windows_server_edition: "SERVERDATACENTERCORE"
+xyz_vmware_vm_templates_windows_local_admin_password: "CHANGEME"
+xyz_vmware_vm_templates_windows_local_vagrant_username: "vagrant"
+xyz_vmware_vm_templates_windows_local_vagrant_password: "vagrant"
 xyz_vmware_vm_templates_windows_guest_id: "windows2019srv_64Guest"
 xyz_vmware_vm_templates_windows_server_info_path: "HKLM:\\SOFTWARE\\XYZ\\TemplateInfo"
 xyz_vmware_vm_templates_windows_install_updates: "false"
