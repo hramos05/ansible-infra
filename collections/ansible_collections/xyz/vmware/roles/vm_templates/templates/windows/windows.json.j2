@@ -12,7 +12,8 @@
     "vm_ram": "<< xyz_vmware_vm_templates_memory_mb >>",
     "vm_disk_controller_type": "<< xyz_vmware_vm_templates_disk_controller_type >>",
     "vm_disk_size": "<< xyz_vmware_vm_templates_disk_os_size_mb >>",
-    "vm_iso_path": "<< xyz_vmware_vm_templates_iso_path >>",
+    "vm_iso_path1": "<< xyz_vmware_vm_templates_iso_path1 >>",
+    "vm_iso_path2": "<< xyz_vmware_vm_templates_iso_path2 >>",
     "winrm_username": "{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_username >>{% endif %}",
     "winrm_password": "{% if lookup('env','VAGRANT_PASSWORD')|length %}<< lookup('env','VAGRANT_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_windows_local_vagrant_password >>{% endif %}",
     "vm_guest_id": "<< xyz_vmware_vm_templates_windows_guest_id >>",
@@ -26,34 +27,39 @@
   "builders": [
     {
       "type": "vsphere-iso",
-      "vcenter_server": "{{user `vcenter_server`}}",
-      "username": "{{user `vcenter_username`}}",
-      "password": "{{user `vcenter_password`}}",
+      "vcenter_server": "{{ user `vcenter_server` }}",
+      "username": "{{ user `vcenter_username` }}",
+      "password": "{{ user `vcenter_password` }}",
       "insecure_connection": "true",
-      "datacenter": "{{user `vcenter_datacenter`}}",
-      "cluster": "{{user `vcenter_cluster`}}",
-      "network": "{{user `vcenter_network`}}",
-      "datastore": "{{user `vcenter_datastore`}}",
-      "folder": "{{user `vcenter_folder`}}",
+      "datacenter": "{{ user `vcenter_datacenter` }}",
+      "cluster": "{{ user `vcenter_cluster` }}",
+      "network": "{{ user `vcenter_network` }}",
+      "datastore": "{{ user `vcenter_datastore` }}",
+      "folder": "{{ user `vcenter_folder` }}",
       "communicator": "winrm",
       "winrm_use_ssl": true,
       "winrm_insecure": true,
-      "winrm_username": "{{user `winrm_username`}}",
-      "winrm_password": "{{user `winrm_password`}}",
+      "winrm_username": "{{ user `winrm_username` }}",
+      "winrm_password": "{{ user `winrm_password` }}",
       "convert_to_template": "true",
       "vm_name": "{{ user `vm_name` }}",
-      "guest_os_type": "{{user `vm_guest_id`}}",
-      "cpus": "{{user `vm_cpu`}}",
-      "ram": "{{user `vm_ram`}}",
+      "guest_os_type": "{{ user `vm_guest_id` }}",
+      "cpus": "{{ user `vm_cpu` }}",
+      "ram": "{{ user `vm_ram` }}",
       "ram_reserve_all": false,
-      "firmware": "{{user `vm_firmware`}}",
-      "disk_controller_type": "{{user `vm_disk_controller_type`}}",
-      "disk_size": "{{user `vm_disk_size`}}",
+      "firmware": "{{ user `vm_firmware` }}",
+      "disk_controller_type": "{{ user `vm_disk_controller_type` }}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "disk_thin_provisioned": true,
       "network_card": "vmxnet3",
       "iso_paths": [
-        "{{user `vm_iso_path`}}",
-        "[] /vmimages/tools-isoimages/windows.iso"
+        "[] /vmimages/tools-isoimages/windows.iso",
+        "{{ user `vm_iso_path1` }}"
+        {%- if xyz_vmware_vm_templates_iso_path2|length -%}
+        ,
+        "{{ user `vm_iso_path2` }}"
+        {% endif %}
+
       ],
       "floppy_img_path": "[] /vmimages/floppies/pvscsi-Windows8.flp",
       "floppy_files": [
@@ -75,7 +81,7 @@
       "source": "./scripts/",
       "destination": "C:/Windows/Setup/Scripts/"
     },
-{% if xyz_vmware_vm_templates_windows_install_updates | bool %}
+{% if xyz_vmware_vm_templates_install_updates | bool %}
     {
       "type": "windows-update",
       "search_criteria": "IsInstalled=0",
