@@ -5,9 +5,9 @@
   connection: local
 
   collections:
-    #- xyz.packer
+    - xyz.packer
     - xyz.vmware
 
   roles:
-    #- xyz.packer.install
+    - xyz.packer.install
     - xyz.vmware.vm_templates
