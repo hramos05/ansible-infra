@@ -30,10 +30,17 @@
         variable_start_string: "<<"
         variable_end_string: ">>"
 
+    - name: Run packer build (force)
+      command: "packer build -force ./build.json"
+      args:
+        chdir: "{{ build_dir['path'] }}"
+      when: xyz_vmware_vm_templates_force | bool
+
     - name: Run packer build
       command: "packer build ./build.json"
       args:
         chdir: "{{ build_dir['path'] }}"
+      when: not xyz_vmware_vm_templates_force | bool
 
   always:
     - name: Remove build directory
