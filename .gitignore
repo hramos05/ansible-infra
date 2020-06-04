@@ -4,3 +4,4 @@
 *.retry
 *.pyc
 .DS_Store
+Vagrantfile

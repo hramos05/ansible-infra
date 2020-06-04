@@ -1,0 +1,4 @@
+---
+xyz_packer_install_version: "1.5.6"
+xyz_packer_install_arch: "amd64"
+xyz_packer_install_bin_path: /usr/local/sbin
