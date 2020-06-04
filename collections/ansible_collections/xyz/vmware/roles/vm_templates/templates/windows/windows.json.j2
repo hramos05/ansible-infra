@@ -53,8 +53,8 @@
       "disk_thin_provisioned": true,
       "network_card": "vmxnet3",
       "iso_paths": [
-        "[] /vmimages/tools-isoimages/windows.iso",
-        "{{ user `vm_iso_path1` }}"
+        "{{ user `vm_iso_path1` }}",
+        "[] /vmimages/tools-isoimages/windows.iso"
         {%- if xyz_vmware_vm_templates_iso_path2|length -%}
         ,
         "{{ user `vm_iso_path2` }}"
