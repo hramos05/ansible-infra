@@ -1,0 +1,41 @@
+#jinja2: trim_blocks:False
+# Create vagrant user account
+d-i passwd/user-fullname string {% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_username >>{% endif %}
+d-i passwd/username string {% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_username >>{% endif %}
+d-i passwd/user-password password {% if lookup('env','VAGRANT_PASSWORD')|length %}<< lookup('env','VAGRANT_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_password >>{% endif %}
+d-i passwd/user-password-again password {% if lookup('env','VAGRANT_PASSWORD')|length %}<< lookup('env','VAGRANT_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_password >>{% endif %}
+d-i user-setup/allow-password-weak boolean true
+d-i user-setup/encrypt-home boolean false
+d-i passwd/user-default-groups {% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_username >>{% endif %} sudo
+d-i passwd/user-uid string 900
+
+# Add vagrant user to sudoers
+d-i preseed/late_command string \
+    echo '{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_username >>{% endif %} ALL=(ALL) NOPASSWD: ALL' > /target/etc/sudoers.d/{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_username >>{% endif %} ; \
+    in-target chmod 440 /etc/sudoers.d/{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_username >>{% endif %} ;
+
+# Configure Root
+d-i passwd/root-login boolean false
+
+# Configure Disk
+d-i partman-auto/disk string /dev/sda
+d-i partman-auto/method string regular
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+
+# Install Packages
+tasksel tasksel/first multiselect standard, ubuntu-server
+d-i pkgsel/include string open-vm-tools openssh-server
+
+# Disable automatic package updates
+d-i pkgsel/update-policy select none
+{% if xyz_vmware_vm_templates_install_updates | bool -%}
+d-i pkgsel/upgrade select full-upgrade
+
+{% endif -%}
+
+# Others
+d-i grub-installer/only_debian boolean true
+d-i finish-install/reboot_in_progress note

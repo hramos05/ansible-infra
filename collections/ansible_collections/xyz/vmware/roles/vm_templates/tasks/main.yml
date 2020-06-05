@@ -1,4 +1,12 @@
 ---
-- name: Run Windows 2019 Builder
-  include_tasks: windows.yml
+- name: Run Windows Builder
+  include_tasks: "build-windows.yml"
   when: "'win-' in xyz_vmware_vm_templates_image | lower"
+
+- name: Run Centos 8 Builder
+  include_tasks: "build-centos8.yml"
+  when: "'lin-centos8' in xyz_vmware_vm_templates_image | lower"
+
+- name: Run Ubuntu 18.04 Builder
+  include_tasks: "build-ubuntu1804.yml"
+  when: "'lin-ubuntu1804' in xyz_vmware_vm_templates_image | lower"

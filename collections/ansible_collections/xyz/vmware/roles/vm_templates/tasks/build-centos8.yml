@@ -1,0 +1,43 @@
+---
+- name: Run build
+  block:
+    - name: Include Centos 8 vars
+      include_vars:
+        file: vars/centos8.yml
+
+    - name: Create build directory
+      tempfile:
+        state: "directory"
+        prefix: "ansible.build."
+      register: build_dir
+
+    - name: Copy scripts
+      copy:
+        src: "files/centos8/"
+        dest: "{{ build_dir['path'] }}/scripts"
+
+    - name: Transform build.json
+      template:
+        src: "centos8/centos8.json.j2"
+        dest: "{{ build_dir['path'] }}/build.json"
+        variable_start_string: "<<"
+        variable_end_string: ">>"
+
+    - name: Run packer build (force)
+      command: "packer build -force ./build.json"
+      args:
+        chdir: "{{ build_dir['path'] }}"
+      when: xyz_vmware_vm_templates_force | bool
+
+    - name: Run packer build
+      command: "packer build ./build.json"
+      args:
+        chdir: "{{ build_dir['path'] }}"
+      when: not xyz_vmware_vm_templates_force | bool
+
+  always:
+    - name: Remove build directory
+      file:
+        path: "{{ build_dir['path'] }}"
+        state: absent
+      when: build_dir['path'] is defined

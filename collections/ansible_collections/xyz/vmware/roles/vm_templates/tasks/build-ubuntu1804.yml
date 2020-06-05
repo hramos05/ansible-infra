@@ -1,9 +1,9 @@
 ---
 - name: Run build
   block:
-    - name: Include Windows vars
+    - name: Include Ubuntu 18.04 vars
       include_vars:
-        file: vars/windows.yml
+        file: vars/ubuntu1804.yml
 
     - name: Create build directory
       tempfile:
@@ -11,21 +11,21 @@
         prefix: "ansible.build."
       register: build_dir
 
-    - name: Copy powershell scripts
+    - name: Copy scripts
       copy:
-        src: "files/windows/"
+        src: "files/ubuntu1804/"
         dest: "{{ build_dir['path'] }}/scripts"
 
-    - name:  Transform autounattend.xml
+    - name: Transform preseed.cfg
       template:
-        src: "windows/windows-autounattend.xml.j2"
-        dest: "{{ build_dir['path'] }}/autounattend.xml"
+        src: "ubuntu1804/preseed.cfg.j2"
+        dest: "{{ build_dir['path'] }}/preseed.cfg"
         variable_start_string: "<<"
         variable_end_string: ">>"
 
     - name: Transform build.json
       template:
-        src: "windows/windows.json.j2"
+        src: "ubuntu1804/ubuntu1804.json.j2"
         dest: "{{ build_dir['path'] }}/build.json"
         variable_start_string: "<<"
         variable_end_string: ">>"
