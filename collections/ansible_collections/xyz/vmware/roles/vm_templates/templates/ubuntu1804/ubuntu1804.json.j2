@@ -47,9 +47,6 @@
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_password": "{{ user `ssh_password` }}",
       "notes": "Template: {{ user `vm_name` }}",
-      "export": {
-        "force": true
-      },
       "iso_paths": [
         "{{ user `vm_iso_path1` }}"
         {%- if xyz_vmware_vm_templates_iso_path2|length -%}
