@@ -5,13 +5,13 @@
   connection: local
 
   collections:
-    #- xyz.packer
-    #- xyz.vmware
-    #- xyz.awx
+    - xyz.packer
+    - xyz.vmware
+    - xyz.awx
 
   roles:
-    #- xyz.packer.install
-    #- xyz.vmware.vm_templates
-    - name: xyz.awx.jmespath
-    - name: xyz.awx.update_survey_vm_template_values
-      when: xyz_awx_update_survey_vm_template_values_job_template_name is defined
+    - name: xyz.packer.install
+    - name: xyz.vmware.vm_templates
+    # - name: xyz.awx.jmespath
+    # - name: xyz.awx.update_survey_vm_template_values
+    #   when: xyz_awx_update_survey_vm_template_values_job_template_name is defined
