@@ -1,0 +1,4 @@
+---
+- name: Update Job Template
+  include_tasks: "job_template.yml"
+  when: "xyz_awx_update_survey_vm_template_values_type | lower == 'job_template'"

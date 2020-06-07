@@ -1,0 +1,10 @@
+---
+- name: Ensure Pip is installed
+  package:
+    name: "python3-pip"
+    state: present
+
+- name: Install JMESPath
+  pip:
+    name: jmespath
+    state: "{{ xyz_awx_jmespath_state }}"

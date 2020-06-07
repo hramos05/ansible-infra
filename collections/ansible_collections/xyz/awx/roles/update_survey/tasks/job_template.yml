@@ -1,7 +1,7 @@
 ---
 - name: Get Job Template Info
   uri:
-    url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_tower_host }}/api/v2/job_templates?name={{ xyz_awx_update_survey_job_template_name }}"
+    url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_tower_host }}/api/v2/job_templates?name={{ xyz_awx_update_survey_job_template_name | urlencode() }}"
     user: "{{ lookup('env', 'TOWER_USERNAME') or xyz_awx_update_survey_tower_username }}"
     password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_awx_update_survey_tower_password }}"
     method: GET

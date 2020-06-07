@@ -7,9 +7,9 @@
   collections:
     #- xyz.packer
     #- xyz.vmware
-    - xyz.awx
+    #- xyz.awx
 
   roles:
     #- xyz.packer.install
     #- xyz.vmware.vm_templates
-    - xyz.awx.update_survey
+    #- xyz.awx.update_survey

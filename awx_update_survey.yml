@@ -1,5 +1,5 @@
 ---
-- name: "Update Survey"
+- name: "Update VM Templates Survey"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -8,4 +8,5 @@
     - xyz.awx
 
   roles:
-    - xyz.awx.update_survey
+    - xyz.awx.jmespath
+    - xyz.awx.update_survey_vm_template_values
