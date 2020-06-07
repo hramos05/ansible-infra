@@ -2,7 +2,7 @@
 xyz_awx_update_survey_vm_template_values_tower_host: "awx.int.xyzramos.com"
 xyz_awx_update_survey_vm_template_values_tower_username: "default"
 xyz_awx_update_survey_vm_template_values_tower_password: "CHANGEME"
-xyz_awx_update_survey_vm_template_values_job_template_name: "VMware - Provision VM - Windows"
+xyz_awx_update_survey_vm_template_values_job_template_name: ""
 xyz_awx_update_survey_vm_template_values_type: "job_template"
-xyz_awx_update_survey_vm_template_values_add: "T-WIN-2019-DC-CORE-20200720"
+xyz_awx_update_survey_vm_template_values_add: ""
 xyz_awx_update_survey_vm_template_values_prompt: []
