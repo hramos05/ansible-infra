@@ -1,7 +1,7 @@
 ---
 - name: "Build VMware Packer Templates"
   hosts: localhost
-  gather_facts: false
+  gather_facts: true
   connection: local
 
   collections:
@@ -10,7 +10,7 @@
     - xyz.awx
 
   roles:
-    - name: xyz.packer.install
+    #- name: xyz.packer.install
     - name: xyz.vmware.vm_templates
     # - name: xyz.awx.jmespath
     # - name: xyz.awx.update_survey_vm_template_values

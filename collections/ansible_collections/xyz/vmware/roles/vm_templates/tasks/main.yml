@@ -1,4 +1,8 @@
 ---
+- name: Set Timestamp
+  set_fact:
+    timestamp: "{{ lookup('pipe','date +%Y%m%d%H%M') }}"
+
 - name: Run Windows Builder
   include_tasks: "build_windows.yml"
   when: "'win-' in xyz_vmware_vm_templates_image | lower"
@@ -10,3 +14,7 @@
 - name: Run Ubuntu 18.04 Builder
   include_tasks: "build_ubuntu1804.yml"
   when: "'lin-ubuntu1804' in xyz_vmware_vm_templates_image | lower"
+
+- name: Set image full name
+  set_fact:
+    xyz_vmware_vm_templates_image_fullname: "T-{{ xyz_vmware_vm_templates_image }}{{ xyz_vmware_vm_templates_image_suffix }}-{{ timestamp }}"
