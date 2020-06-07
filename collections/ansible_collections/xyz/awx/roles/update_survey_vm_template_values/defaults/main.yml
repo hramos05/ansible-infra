@@ -4,5 +4,5 @@ xyz_awx_update_survey_vm_template_values_tower_username: "default"
 xyz_awx_update_survey_vm_template_values_tower_password: "CHANGEME"
 xyz_awx_update_survey_vm_template_values_job_template_name: ""
 xyz_awx_update_survey_vm_template_values_type: "job_template"
-xyz_awx_update_survey_vm_template_values_add: ""
+xyz_awx_update_survey_vm_template_values_add: "{{ xyz_vmware_vm_templates_image_fullname }}"
 xyz_awx_update_survey_vm_template_values_prompt: []
