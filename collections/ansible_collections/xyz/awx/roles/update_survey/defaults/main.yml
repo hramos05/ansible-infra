@@ -1,0 +1,7 @@
+---
+xyz_awx_update_survey_tower_host: "awx.int.xyzramos.com"
+xyz_awx_update_survey_tower_username: "default"
+xyz_awx_update_survey_tower_password: "CHANGEME"
+xyz_awx_update_survey_job_template_name: "TEST"
+xyz_awx_update_survey_type: "job_template"
+xyz_awx_update_survey_prompt: []

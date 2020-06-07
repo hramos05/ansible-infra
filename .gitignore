@@ -1,6 +1,7 @@
 # Ignore Folders/Files
 .vagrant/
 .vscode/
+.unsync/
 *.retry
 *.pyc
 .DS_Store

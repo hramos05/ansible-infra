@@ -1,0 +1,27 @@
+#jinja2: trim_blocks:False
+{
+  "name": "",
+  "description": "",
+  "spec": [
+{%- for item in xyz_awx_update_survey_prompt | list %}
+    {
+      "question_name": "{{ item['question_name'] }}",
+      "question_description": "{{ item['question_description'] }}",
+      "required": {{ item['required'] | capitalize }},
+      "type": "{{ item['type'] }}",
+      "variable": "{{ item['variable'] }}",
+      "min": {{ item['min'] }},
+      "max": {{ item['max'] }},
+      "choices": "{{ item['choices'] }}",
+{%- if item['type'] == 'integer' %}
+      "default": {{ item['default'] }}
+{%- else %}
+      "default": "{{ item['default'] }}"
+{%- endif %}
+    }
+{%- if not loop.last -%}
+,
+{%- endif -%}
+{% endfor %}
+  ]
+}

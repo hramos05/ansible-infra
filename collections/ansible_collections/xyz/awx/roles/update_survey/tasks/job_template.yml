@@ -1,0 +1,35 @@
+---
+- name: Get Job Template Info
+  uri:
+    url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_tower_host }}/api/v2/job_templates?name={{ xyz_awx_update_survey_job_template_name }}"
+    user: "{{ lookup('env', 'TOWER_USERNAME') or xyz_awx_update_survey_tower_username }}"
+    password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_awx_update_survey_tower_password }}"
+    method: GET
+    force_basic_auth: yes
+    status_code: 200
+  register: jt_info
+
+- set_fact:
+    jt_survey_url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_tower_host }}{{ jt_info['json']['results'][0]['related']['survey_spec'] }}"
+    jt_survey_spec_new: "{{ lookup('template', 'survey.json.j2') }}"
+
+- name: Get current job template survey
+  uri:
+    url: "{{ jt_survey_url }}"
+    user: "{{ lookup('env', 'TOWER_USERNAME') or xyz_awx_update_survey_tower_username }}"
+    password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_awx_update_survey_tower_password }}"
+    method: GET
+    force_basic_auth: yes
+    body_format: "json"
+  register: jt_survey_spec_current
+
+- name: Set job template survey
+  uri:
+    url: "{{ jt_survey_url }}"
+    user: "{{ lookup('env', 'TOWER_USERNAME') or xyz_awx_update_survey_tower_username }}"
+    password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_awx_update_survey_tower_password }}"
+    method: POST
+    force_basic_auth: yes
+    body_format: "json"
+    body: '{{ jt_survey_spec_new | to_json }}'
+  when: jt_survey_spec_current['json'] != jt_survey_spec_new

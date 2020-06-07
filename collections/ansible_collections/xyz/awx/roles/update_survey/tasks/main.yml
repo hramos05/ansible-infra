@@ -1,0 +1,9 @@
+---
+- name: Update Job Template
+  include_tasks: "job_template.yml"
+  when: "xyz_awx_update_survey_type | lower == 'job_template'"
+
+- name: Fail unsupported type
+  fail:
+    msg: "{{ xyz_awx_update_survey_type }} is not supported"
+  when: "xyz_awx_update_survey_type | lower != 'job_template'"

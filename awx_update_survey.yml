@@ -1,0 +1,11 @@
+---
+- name: "Update Survey"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+
+  collections:
+    - xyz.awx
+
+  roles:
+    - xyz.awx.update_survey
