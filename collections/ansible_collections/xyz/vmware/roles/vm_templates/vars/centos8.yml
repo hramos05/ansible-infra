@@ -1,4 +1,4 @@
 ---
 xyz_vmware_vm_templates_guest_id: "centos8_64Guest"
-xyz_vmware_vm_templates_iso_path1: "[NFS-Content] ISO/Linux/CentOS/CentOS-8.1.1911-x86_64-dvd1.iso"
+xyz_vmware_vm_templates_iso_path1: "[vsanDatastore] ISO/Linux/CentOS/CentOS-8.1.1911-x86_64-dvd1.iso"
 xyz_vmware_vm_templates_iso_path2: "[NFS-Content] ISO/Linux/CentOS/CentOS8-kickstart.iso"
