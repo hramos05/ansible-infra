@@ -5,16 +5,19 @@
 
 - name: Run Windows Builder
   include_tasks: "build_windows.yml"
-  when: "'win-' in xyz_vmware_vm_templates_image | lower"
+  when: "'win' in xyz_vmware_vm_templates_image | lower"
 
 - name: Run Centos 8 Builder
   include_tasks: "build_centos8.yml"
-  when: "'lin-centos8' in xyz_vmware_vm_templates_image | lower"
+  when: "'centos8' in xyz_vmware_vm_templates_image | lower"
 
 - name: Run Ubuntu 18.04 Builder
   include_tasks: "build_ubuntu1804.yml"
-  when: "'lin-ubuntu1804' in xyz_vmware_vm_templates_image | lower"
+  when: "'ubuntu1804' in xyz_vmware_vm_templates_image | lower"
 
 - name: Set image full name
   set_fact:
     xyz_vmware_vm_templates_image_fullname: "T-{{ xyz_vmware_vm_templates_image }}{{ xyz_vmware_vm_templates_image_suffix }}-{{ timestamp }}"
+
+- debug:
+    msg: "{{ xyz_vmware_vm_templates_image_fullname }}"
