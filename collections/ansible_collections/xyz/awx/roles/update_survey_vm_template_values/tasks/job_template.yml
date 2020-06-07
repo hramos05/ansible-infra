@@ -39,7 +39,7 @@
 
   - name: Add new image to the list
     set_fact:
-      jt_survey_spec_new_templates_choices: '{{ ((jt_survey_spec_current_templates_choice + [xyz_awx_update_survey_vm_template_values_add]) | sort(reverse = True))[:3] }}'
+      jt_survey_spec_new_templates_choices: '{{ ((jt_survey_spec_current_templates_choice + [xyz_awx_update_survey_vm_template_values_add]) | sort(reverse = True)) }}'
     when: xyz_awx_update_survey_vm_template_values_add not in jt_survey_spec_current_templates_choice
 
   - name: Transform the survey JSON
