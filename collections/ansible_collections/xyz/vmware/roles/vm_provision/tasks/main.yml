@@ -26,6 +26,8 @@
     force: yes
     customization:
       hostname: "{{ xyz_vmware_vm_name | upper }}"
+      runonce:
+      - powershell.exe -ExecutionPolicy bypass -ScriptBlock {Invoke-WebRequest -Method POST -Body 'host_config_key=1b225f30-3959-4cb4-82b8-ac4356b1cd2b' -Uri https://awx.int.xyzramos.com/api/v2/job_templates/27/callback/ -UseBasicParsing }
   register: new_vm
   delegate_to: localhost
 
@@ -66,4 +68,10 @@
   when: not xyz_vmware_vm_destroy | bool
   delegate_to: localhost
 
-# - name: 
+# - name: Start roles playbook
+#   uri:
+#     url: "https://awx.int.xyzramos.com:443 /api/v2/job_templates/27/callback/"
+#     method: POST
+#     force_basic_auth: yes
+#     body: 'host_config_key=1b225f30-3959-4cb4-82b8-ac4356b1cd2b'
+#   when: not xyz_vmware_vm_destroy | bool
