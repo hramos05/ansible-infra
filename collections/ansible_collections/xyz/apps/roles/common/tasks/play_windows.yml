@@ -1,3 +1,44 @@
 ---
-- debug:
-    msg: "Windows playbook"
+- name: Join domain
+  win_domain_membership:
+    dns_domain_name: "{{ xyz_apps_common_domain }}"
+    domain_admin_user: "{{ lookup('env', 'JOIN_DOMAIN_USER') or xyz_apps_common_domain_user }}"
+    domain_admin_password: "{{ lookup('env', 'JOIN_DOMAIN_PASSWORD') or xyz_apps_common_domain_password }}"
+    domain_ou_path: "{{ xyz_apps_common_domain_ou }}"
+    state: domain
+  register: domain_join_state
+  when: xyz_apps_common_join_domain | bool
+
+- name: Join domain reboot
+  win_reboot:
+    post_reboot_delay: 15
+  when:
+    - domain_join_state['reboot_required'] is defined
+    - domain_join_state['reboot_required']
+
+- name: Get DSC Modules
+  win_psmodule:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - xRemoteDesktopAdmin
+
+- name: Enable RDP
+  win_dsc:
+    resource_name: xRemoteDesktopAdmin
+    ensure: present
+    userauthentication: Secure
+
+- name: Firewall rule to allow RDP on TCP port 3389
+  win_firewall_rule:
+    name: "Administrator access for RDP (TCP-In)"
+    localport: 3389
+    action: allow
+    direction: in
+    protocol: tcp
+    profiles:
+      - private
+      - domain
+      - public
+    state: present
+    enabled: yes

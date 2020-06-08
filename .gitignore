@@ -2,6 +2,7 @@
 .vagrant/
 .vscode/
 .unsync/
+.unsync.*
 *.retry
 *.pyc
 .DS_Store

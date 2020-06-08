@@ -1,1 +1,6 @@
 ---
+xyz_apps_common_join_domain: "true"
+xyz_apps_common_domain: "int.xyzramos.com"
+xyz_apps_common_domain_user: "default"
+xyz_apps_common_domain_password: "CHANGEME"
+xyz_apps_common_domain_ou: "OU=zzBuild,OU=zzServers,DC=int,DC=xyzramos,DC=com"
