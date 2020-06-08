@@ -72,6 +72,6 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') or xyz_vmware_vm_provision_tower_host }}"
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') or xyz_vmware_vm_provision_tower_username }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_vmware_vm_provision_tower_password }}"
-    job_template: "Server - Apply (Roles)"
+    job_template: "Server - Apply Role(s)"
     limit: "{{ new_vm_info['instance']['hw_name'] }}"
   when: not xyz_vmware_vm_destroy | bool
