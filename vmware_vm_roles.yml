@@ -7,4 +7,4 @@
     - xyz.apps
 
   roles:
-    - xyz.apps.common-windows
+    - xyz.apps.common_windows
