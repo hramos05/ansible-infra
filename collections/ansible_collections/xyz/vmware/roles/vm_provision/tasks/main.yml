@@ -45,6 +45,14 @@
   delay: 15
   delegate_to: localhost
 
+- name: Generate the required roles
+  set_fact:
+    assign_common_role: "{{ 'common_windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'common_linux' }}"
+
+- name: Generate the required roles
+  set_fact:
+    assigned_roles: "{{ xyz_vmware_vm_provision_roles + [assign_common_role] | list }}"
+
 - name: Add host to build inventory
   tower_host:
     validate_certs: no
@@ -61,8 +69,7 @@
       ansible_port: {{ '5986' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else '22' }}
       ansible_winrm_server_cert_validation: "{{ 'ignore' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else omit }}"
       ansible_winrm_transport: "{{ 'credssp' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else omit }}"
-      assigned_roles:
-        - {{ 'common_windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'common_linux' }}
+      assigned_roles: {{ assigned_roles }}
   when: not xyz_vmware_vm_destroy | bool
   delegate_to: localhost
 

@@ -2,6 +2,7 @@
 xyz_vmware_vm_provision_tower_host: "awx.int.xyzramos.com"
 xyz_vmware_vm_provision_tower_username: "default"
 xyz_vmware_vm_provision_tower_password: "CHANGEME"
+xyz_vmware_vm_provision_roles: []
 xyz_vmware_vm_destroy: "false"
 xyz_vmware_vm_state: "{{ 'absent' if xyz_vmware_vm_destroy|bool else 'present' }}"
 xyz_vmware_vm_vcenter_server: "vcsa.int.xyzramos.com"
