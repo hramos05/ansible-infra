@@ -1,0 +1,12 @@
+---
+xyz_apps_mssql_installer_source: "https://go.microsoft.com/fwlink/?linkid=866662"
+xyz_apps_mssql_temporary_path: "C:\\Temp"
+xyz_apps_mssql_installation_path: "C:\\MSSQL"
+xyz_apps_mssql_instance_name: "MSSQLSERVER"
+xyz_apps_mssql_installshared_path: "C:\\Program Files\\Microsoft SQL Server"
+xyz_apps_mssql_installsharedwow_path: "C:\\Program Files (x86)\\Microsoft SQL Server"
+xyz_apps_mssql_instance_path: "C:\\Program Files\\Microsoft SQL Server\\{{ mssql_instance_name }}"
+xyz_apps_mssql_features: SQLENGINE,FULLTEXT,CONN
+xyz_apps_mssql_collation: "SQL_Latin1_General_CP1_CI_AS"
+xyz_apps_mssql_sysadmin_accounts:
+  - XYZ\GRP_Administrators

@@ -1,5 +1,5 @@
 ---
-- name: Ensure Pip is installed
+- name: Install PIP3
   package:
     name: "python3-pip"
     state: present

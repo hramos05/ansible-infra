@@ -1,0 +1,67 @@
+---
+- name: Install PS Modules
+  win_psmodule:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - SQLServerDsc
+    - ServerManager
+    - dbatools
+
+- name: Create temporary directory
+  win_file:
+    path: "{{ xyz_apps_mssql_temporary_path }}"
+    state: directory
+
+- name: Get SQL Media
+  win_get_url:
+    url: "{{ xyz_apps_mssql_installer_source }}"
+    dest: "{{ xyz_apps_mssql_temporary_path }}\\SQLServer2019.exe"
+
+- name: Get installation CABs
+  win_shell: "{{ xyz_apps_mssql_temporary_path  }}\\SQLServer2019.exe /Action=Download /MediaPath={{ xyz_apps_mssql_installation_path }} /MediaType=CAB /Quiet"
+  args:
+    creates: "{{ xyz_apps_mssql_installation_path }}\\SQLServer2019-DEV-x64-ENU.exe"
+
+- name: Extract media
+  win_shell:  "{{ xyz_apps_mssql_installation_path }}\\SQLServer2019-DEV-x64-ENU.exe /X:{{ xyz_apps_mssql_installation_path }}\\Media /Q"
+  args:
+    creates: "{{ xyz_apps_mssql_installation_path }}\\Media\\SETUP.EXE"
+
+- name: Install SQL Server
+  win_dsc:
+    resource_name: SQLSetup
+    Action: Install
+    UpdateEnabled: True
+    SourcePath: "{{ xyz_apps_mssql_installation_path }}\\Media"
+    InstanceName: "{{ xyz_apps_mssql_instance_name }}"
+    Features: "{{ xyz_apps_mssql_features }}"
+    SQLCollation: "{{ xyz_apps_mssql_collation }}"
+    BrowserSvcStartupType: "Automatic"
+    SuppressReboot: "False"
+    SQLSysAdminAccounts: "{{ xyz_apps_mssql_sysadmin_accounts }}"
+    PsDscRunAsCredential_username: '{{ ansible_user }}'
+    PsDscRunAsCredential_password: '{{ ansible_password }}'
+
+- name: Enable TCP Connectivity
+  win_dsc:
+    resource_name: SqlServerNetwork
+    InstanceName: "{{ xyz_apps_mssql_instance_name }}"
+    ProtocolName: tcp
+    TcpPort: "1433"
+    IsEnabled: True
+    RestartService: True
+
+- name: Firewall rule to allow TCP 1433
+  win_firewall_rule:
+    name: "Allow MSSQL (TCP-in)"
+    localport: 1433
+    action: allow
+    direction: in
+    protocol: tcp
+    profiles:
+      - private
+      - domain
+      - public
+    state: present
+    enabled: yes

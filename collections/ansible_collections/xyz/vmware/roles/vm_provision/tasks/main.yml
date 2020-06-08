@@ -65,6 +65,22 @@
   when: not xyz_vmware_vm_destroy | bool
   delegate_to: localhost
 
+- name: Add host to windows/linux inventory
+  tower_host:
+    validate_certs: no
+    tower_host: "{{ lookup('env', 'TOWER_HOST') or xyz_vmware_vm_provision_tower_host }}"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') or xyz_vmware_vm_provision_tower_username }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_vmware_vm_provision_tower_password }}"
+    name: "{{ new_vm_info['instance']['hw_name'] }}"
+    inventory: "{{ 'Windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'Linux' }}"
+    state: present
+    variables: |+
+      ---
+      ansible_host: "{{ new_vm_info['instance']['ipv4'] }}"
+      assigned_roles: {{ xyz_vmware_vm_provision_roles }}
+  when: not xyz_vmware_vm_destroy | bool
+  delegate_to: localhost
+
 - name: Initiate roles playbook
   tower_job_launch:
     validate_certs: no
