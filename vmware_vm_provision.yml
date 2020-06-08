@@ -6,7 +6,8 @@
 
   collections:
     - name: xyz.vmware
+    - name: xyz.awx
 
   roles:
+    - name: xyz.awx.tower_cli
     - name: xyz.vmware.vm_provision
-    #- name: xyz.awx.add_host
