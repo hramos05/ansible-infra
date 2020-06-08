@@ -45,14 +45,6 @@
   delay: 15
   delegate_to: localhost
 
-# - name: Generate the required roles
-#   set_fact:
-#     assign_common_role: "{{ 'common_windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'common_linux' }}"
-
-# - name: Generate the required roles
-#   set_fact:
-#     assigned_roles: "{{ xyz_vmware_vm_provision_roles + [assign_common_role] | list }}"
-
 - name: Add host to build inventory
   tower_host:
     validate_certs: no
