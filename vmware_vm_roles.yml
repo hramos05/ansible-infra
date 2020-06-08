@@ -1,5 +1,5 @@
 ---
-- name: "Install Roles"
+- name: "Apply Roles"
   hosts: all
   gather_facts: true
 
