@@ -6,5 +6,10 @@
   collections:
     - xyz.apps
 
-  roles:
-    - xyz.apps.common_windows
+  tasks:
+    - name: Roles from host var
+      include_role:
+        name: "{{ role_input }}"
+      loop: "{{ assigned_roles }}"
+      loop_control:
+        loop_var: role_input
