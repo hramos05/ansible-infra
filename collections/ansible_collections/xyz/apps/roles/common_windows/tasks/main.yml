@@ -1,3 +1,7 @@
 ---
+- name: Run command
+  win_command: hostname
+  register: result
+
 - debug:
-    msg: "Show something"
+    msg: "{{ result }}"
