@@ -5,6 +5,14 @@
     include_vars: windows.yml
     when: "'win' in xyz_awx_update_survey_vm_template_values_add | lower"
 
+  - name: Include vars (Centos8)
+    include_vars: centos8.yml
+    when: "'centos8' in xyz_awx_update_survey_vm_template_values_add | lower"
+
+  - name: Include vars (Ubuntu 18.04)
+    include_vars: ubuntu1804.yml
+    when: "'ubuntu1804' in xyz_awx_update_survey_vm_template_values_add | lower"
+
   - name: Get Job Template Info
     uri:
       url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_vm_template_values_tower_host }}/api/v2/job_templates/?name={{ xyz_awx_update_survey_vm_template_values_job_template_name | urlencode() }}"
