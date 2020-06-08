@@ -9,3 +9,4 @@
 
   roles:
     - name: xyz.vmware.vm_provision
+    #- name: xyz.awx.add_host

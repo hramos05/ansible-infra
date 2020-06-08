@@ -1,0 +1,10 @@
+---
+- name: "Install Roles"
+  hosts: "Build In-Progress"
+  gather_facts: true
+
+  collections:
+    - xyz.awx
+
+  roles:
+    - xyz.awx.apps.common-windows

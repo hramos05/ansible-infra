@@ -1,0 +1,13 @@
+---
+xyz_awx_add_host_tower_host: "awx.int.xyzramos.com"
+xyz_awx_add_host_tower_username: "default"
+xyz_awx_add_host_tower_password: "CHANGEME"
+xyz_awx_add_host_inventory: "TEST"
+xyz_awx_add_host_name: "job_template"
+xyz_awx_add_host_vars: |+
+    ---
+    ansible_host: "{{ windows_vm_ip }}"
+    ansible_connection: winrm
+    ansible_port: 5986
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_transport: credssp

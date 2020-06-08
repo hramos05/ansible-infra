@@ -45,10 +45,25 @@
   delay: 15
   delegate_to: localhost
 
-- name: "Update temp inventory with new host"
-  add_host:
-    hostname: "{{ new_vm_info['instance']['hw_name'] }}"
-    ansible_host: "{{ new_vm_info['instance']['ipv4'] }}"
-    groups: "{{ 'windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'linux' }}"
-  when: not xyz_vmware_vm_destroy|bool
+- name: Add host to build inventory
+  tower_host:
+    validate_certs: no
+    tower_host: "{{ lookup('env', 'TOWER_HOST') or xyz_vmware_vm_provision_tower_host }}"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') or xyz_vmware_vm_provision_tower_username }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_vmware_vm_provision_tower_password }}"
+    name: "{{ new_vm_info['instance']['hw_name'] }}"
+    inventory: "Build In-Progress"
+    state: present
+    variables: |+
+      ---
+      ansible_host: "{{ new_vm_info['instance']['ipv4'] }}"
+      ansible_connection: "{{ 'winrm' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'ssh' }}"
+      ansible_port: {{ '5986' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else '22' }}
+      ansible_winrm_server_cert_validation: "{{ 'ignore' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else omit }}"
+      ansible_winrm_transport: "{{ 'credssp' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else omit }}"
+      assigned_roles:
+        - {{ 'common-windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'common-linux' }}
+  when: not xyz_vmware_vm_destroy | bool
   delegate_to: localhost
+
+# - name: 
