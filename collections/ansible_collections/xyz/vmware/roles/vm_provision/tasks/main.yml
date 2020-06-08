@@ -62,7 +62,7 @@
       ansible_winrm_server_cert_validation: "{{ 'ignore' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else omit }}"
       ansible_winrm_transport: "{{ 'credssp' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else omit }}"
       assigned_roles:
-        - {{ 'common-windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'common-linux' }}
+        - {{ 'common_windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'common_linux' }}
   when: not xyz_vmware_vm_destroy | bool
   delegate_to: localhost
 
