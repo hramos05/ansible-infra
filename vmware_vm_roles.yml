@@ -1,5 +1,6 @@
 ---
 - name: "Install Roles"
+  hosts: all
   gather_facts: true
 
   collections:
