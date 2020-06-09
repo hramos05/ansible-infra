@@ -5,7 +5,9 @@
   connection: local
 
   collections:
-    - name: xyz.vmware
+    - xyz.awx
+    - xyz.vmware
 
   roles:
-    - name: xyz.vmware.vm_destroy
+    - xyz.awx.tower_cli
+    - xyz.vmware.vm_destroy
