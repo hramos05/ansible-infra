@@ -67,7 +67,7 @@
     tower_host: "{{ lookup('env', 'TOWER_HOST') or xyz_vmware_vm_provision_tower_host }}"
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') or xyz_vmware_vm_provision_tower_username }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_vmware_vm_provision_tower_password }}"
-    job_template: "Server - Apply Role(s)"
+    job_template: "{{ 'Server - Roles - Windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'Server - Roles - Linux' }}"
     limit: "{{ new_vm_info['instance']['hw_name'] }}"
   when: not xyz_vmware_vm_destroy | bool
   register: job_launch
