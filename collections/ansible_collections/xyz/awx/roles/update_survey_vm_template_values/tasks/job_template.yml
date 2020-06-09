@@ -1,0 +1,90 @@
+---
+- name: Run Play
+  block:
+  - name: Include vars (Windows)
+    include_vars: windows.yml
+    when: "'win' in xyz_awx_update_survey_vm_template_values_add | lower"
+
+  - name: Include vars (Centos8)
+    include_vars: centos8.yml
+    when: "'centos8' in xyz_awx_update_survey_vm_template_values_add | lower"
+
+  - name: Include vars (Ubuntu 18.04)
+    include_vars: ubuntu1804.yml
+    when: "'ubuntu1804' in xyz_awx_update_survey_vm_template_values_add | lower"
+
+  - name: Get Job Template Info
+    uri:
+      url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_vm_template_values_tower_host }}/api/v2/job_templates/?name={{ xyz_awx_update_survey_vm_template_values_job_template_name | urlencode() }}"
+      user: "{{ lookup('env', 'TOWER_USERNAME') or xyz_awx_update_survey_vm_template_values_tower_username }}"
+      password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_awx_update_survey_vm_template_values_tower_password }}"
+      method: GET
+      force_basic_auth: yes
+      status_code: 200
+    register: jt_info
+
+  - name: Get job template ID
+    set_fact:
+        jt_id: "{{ jt_info['json']['results'][0]['id'] }}"
+
+  - name: Get current job template survey spec
+    uri:
+      url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_vm_template_values_tower_host }}{{ jt_info['json']['results'][0]['related']['survey_spec'] }}"
+      user: "{{ lookup('env', 'TOWER_USERNAME') or xyz_awx_update_survey_vm_template_values_tower_username }}"
+      password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_awx_update_survey_vm_template_values_tower_password }}"
+      method: GET
+      force_basic_auth: yes
+      body_format: "json"
+    register: jt_survey_spec_current
+
+  - name: Get current templates object
+    set_fact:
+      jt_survey_spec_current_templates: "{{ jt_survey_spec_current['json']['spec'] | json_query(\"[?variable=='xyz_vmware_vm_template']\") }}"
+
+  - name: Get current templates choices
+    set_fact:
+      jt_survey_spec_current_templates_choice: '{{ (jt_survey_spec_current_templates[0]["choices"]).splitlines() }}'
+
+  - name: Add new image to the list
+    set_fact:
+      jt_survey_spec_new_templates_choices: '{{ ((jt_survey_spec_current_templates_choice + [xyz_awx_update_survey_vm_template_values_add]) | sort(reverse = True)) }}'
+    when: xyz_awx_update_survey_vm_template_values_add not in jt_survey_spec_current_templates_choice
+
+  - name: Transform the survey JSON
+    set_fact:
+      jt_survey_spec_new: "{{ lookup('template', 'survey.json.j2') }}"
+    when: xyz_awx_update_survey_vm_template_values_add not in jt_survey_spec_current_templates_choice
+
+  - name: Set new job template survey spec
+    uri:
+      url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_vm_template_values_tower_host }}{{ jt_info['json']['results'][0]['related']['survey_spec'] }}"
+      user: "{{ lookup('env', 'TOWER_USERNAME') or xyz_awx_update_survey_vm_template_values_tower_username }}"
+      password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_awx_update_survey_vm_template_values_tower_password }}"
+      method: POST
+      force_basic_auth: yes
+      body_format: "json"
+      body: '{{ jt_survey_spec_new | to_json }}'
+    when:
+      - jt_survey_spec_new is defined
+      - jt_survey_spec_new['spec'] | length > 0
+      - jt_survey_spec_current['json'] != jt_survey_spec_new
+      - xyz_awx_update_survey_vm_template_values_add not in jt_survey_spec_current_templates_choice
+
+  - name: Enable job template survey
+    uri:
+      url: "https://{{ lookup('env', 'TOWER_HOST') or xyz_awx_update_survey_vm_template_values_tower_host }}/api/v2/job_templates/{{ jt_id }}/"
+      user: "{{ lookup('env', 'TOWER_USERNAME') or xyz_awx_update_survey_vm_template_values_tower_username }}"
+      password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_awx_update_survey_vm_template_values_tower_password }}"
+      method: PATCH
+      force_basic_auth: yes
+      body_format: "json"
+      body: '{ "survey_enabled" : "true" }'
+    when:
+      - jt_survey_spec_new is defined
+      - jt_survey_spec_new['spec'] | length > 0
+      - jt_info['json']['results'][0]['survey_enabled'] | lower != 'true'
+  when:
+    - xyz_awx_update_survey_vm_template_values_add is defined
+    - xyz_awx_update_survey_vm_template_values_add | length > 0
+    - xyz_awx_update_survey_vm_template_values_job_template_name is defined
+    - xyz_awx_update_survey_vm_template_values_job_template_name | length > 0

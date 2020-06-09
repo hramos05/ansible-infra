@@ -1,0 +1,12 @@
+---
+- name: Windows
+  include_tasks: "play_windows.yml"
+  when: "'windows' in ansible_distribution | lower"
+
+- name: Centos8
+  include_tasks: "play_centos.yml"
+  when: "'redhat' in ansible_distribution | lower"
+
+- name: Debian
+  include_tasks: "play_debian.yml"
+  when: "'debian' in ansible_distribution | lower"

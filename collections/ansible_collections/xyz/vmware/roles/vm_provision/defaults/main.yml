@@ -1,0 +1,49 @@
+---
+xyz_vmware_vm_provision_tower_host: "awx.int.xyzramos.com"
+xyz_vmware_vm_provision_tower_username: "default"
+xyz_vmware_vm_provision_tower_password: "CHANGEME"
+xyz_vmware_vm_provision_roles: []
+xyz_vmware_vm_destroy: "false"
+xyz_vmware_vm_state: "{{ 'absent' if xyz_vmware_vm_destroy|bool else 'present' }}"
+xyz_vmware_vm_vcenter_server: "vcsa.int.xyzramos.com"
+xyz_vmware_vm_vcenter_user: "default"
+xyz_vmware_vm_vcenter_pass: "CHANGEME"
+xyz_vmware_vm_name: "default"
+xyz_vmware_vm_datacenter: "XYZ"
+xyz_vmware_vm_cluster: "vSAN"
+xyz_vmware_vm_folder: "998 - Temporary"
+xyz_vmware_vm_template: "T-WIN2019-CORE-202006080225"
+xyz_vmware_vm_datastore: "vsanDatastore"
+xyz_vmware_vm_num_cpus: "2"
+xyz_vmware_vm_num_cpu_cores_per_socket: "1"
+xyz_vmware_vm_memory_mb: "4096"
+xyz_vmware_vm_hotadd_cpu: "false"
+xyz_vmware_vm_hotremove_cpu: "false"
+xyz_vmware_vm_hotadd_memory: "false"
+xyz_vmware_wait_for_ip_address: "true"
+xyz_vmware_wait_for_customization: "true"
+xyz_vmware_vm_cdrom:
+  - type: "client"
+xyz_vmware_vm_vlan: "VLAN100 - INF"
+xyz_vmware_vm_networks:
+  - name: "{{ xyz_vmware_vm_vlan }}"
+    type: "dhcp"
+xyz_vmware_vm_disk_os: "70"
+xyz_vmware_vm_disk_data1: 0
+xyz_vmware_vm_disk_data2: 0
+xyz_vmware_vm_disk_data3: 0
+xyz_vmware_vm_disk_data4: 0
+xyz_vmware_vm_disks:
+  - size_gb: "{{ xyz_vmware_vm_disk_os }}"
+    type: "thin"
+  - size_gb: "{{ xyz_vmware_vm_disk_data1 if xyz_vmware_vm_disk_data1 is defined and xyz_vmware_vm_disk_data1 > 0 else none }}"
+    type: "{{ 'thin' if xyz_vmware_vm_disk_data1 is defined else omit }}"
+  # BUG: Cannot add more than 2 disk at a time currently
+  # - size_gb: "{{ xyz_vmware_vm_disk_data2 if xyz_vmware_vm_disk_data2 is defined else none }}"
+  #   type: "{{ 'thin' if xyz_vmware_vm_disk_data2 is defined else omit }}"
+  # - size_gb: "{{ xyz_vmware_vm_disk_data3 if xyz_vmware_vm_disk_data3 is defined else none }}"
+  #   type: "{{ 'thin' if xyz_vmware_vm_disk_data3 is defined else omit }}"
+  # - size_gb:  "{{ xyz_vmware_vm_disk_data4 if xyz_vmware_vm_disk_data4 is defined else none }}"
+  #   type: "{{ 'thin' if xyz_vmware_vm_disk_data4 is defined else omit }}"
+  # - size_gb: "{{ xyz_vmware_vm_disk_data1 if xyz_vmware_vm_disk_data1 is defined and xyz_vmware_vm_disk_data1 > 0 else none }}"
+  #   type: "{{ 'thin' if xyz_vmware_vm_disk_data1 is defined else omit }}"

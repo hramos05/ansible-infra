@@ -1,0 +1,79 @@
+---
+- name: Create VM from template
+  community.vmware.vmware_guest:
+    validate_certs: false
+    hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
+    username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
+    password: "{{ lookup('env', 'VMWARE_PASSWORD') or xyz_vmware_vm_vcenter_pass }}"
+    name: "{{ xyz_vmware_vm_name | upper }}"
+    datacenter: "{{ xyz_vmware_vm_datacenter }}"
+    cluster: "{{ xyz_vmware_vm_cluster }}"
+    folder: "{{ xyz_vmware_vm_folder }}"
+    template: "{{ xyz_vmware_vm_template }}"
+    hardware:
+      num_cpus: "{{ xyz_vmware_vm_num_cpus }}"
+      num_cpu_cores_per_socket: "{{ xyz_vmware_vm_num_cpu_cores_per_socket }}"
+      hotadd_cpu: "{{ xyz_vmware_vm_hotadd_cpu }}"
+      hotremove_cpu: "{{ xyz_vmware_vm_hotremove_cpu }}"
+      hotadd_memory: "{{ xyz_vmware_vm_hotadd_memory }}"
+      memory_mb: "{{ xyz_vmware_vm_memory_mb }}"
+    datastore: "{{ xyz_vmware_vm_datastore }}"
+    disk: "{{ xyz_vmware_vm_disks | selectattr('size_gb') | list }}"
+    networks: "{{ xyz_vmware_vm_networks }}"
+    wait_for_ip_address: "{{ xyz_vmware_wait_for_ip_address }}"
+    wait_for_customization: "{{ xyz_vmware_wait_for_customization }}"
+    state: "{{ xyz_vmware_vm_state }}"
+    force: yes
+    customization:
+      hostname: "{{ xyz_vmware_vm_name | upper }}"
+  register: new_vm
+  delegate_to: localhost
+
+- name: Waiting for the IPv4 address to be assigned
+  community.vmware.vmware_guest_info:
+    validate_certs: false
+    hostname: "{{ lookup('env', 'VMWARE_HOST') or xyz_vmware_vm_vcenter_server }}"
+    username: "{{ lookup('env', 'VMWARE_USER') or xyz_vmware_vm_vcenter_user }}"
+    password: "{{ lookup('env', 'VMWARE_PASSWORD') or xyz_vmware_vm_vcenter_pass }}"
+    moid: "{{ new_vm['instance']['moid'] }}"
+    datacenter: "{{ xyz_vmware_vm_datacenter }}"
+    folder: "{{ xyz_vmware_vm_folder }}"
+  register: new_vm_info
+  when: not xyz_vmware_vm_destroy|bool
+  until: new_vm_info['instance']['ipv4'] is not none
+  retries: 30
+  delay: 15
+  delegate_to: localhost
+
+- name: Add host to inventory
+  tower_host:
+    validate_certs: no
+    tower_host: "{{ lookup('env', 'TOWER_HOST') or xyz_vmware_vm_provision_tower_host }}"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') or xyz_vmware_vm_provision_tower_username }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_vmware_vm_provision_tower_password }}"
+    name: "{{ new_vm_info['instance']['hw_name'] }}"
+    inventory: "Windows"
+    state: present
+    variables: |+
+      ---
+      ansible_host: "{{ new_vm_info['instance']['ipv4'] }}"
+      assigned_roles: {{ xyz_vmware_vm_provision_roles }}
+  when: not xyz_vmware_vm_destroy | bool
+  delegate_to: localhost
+
+- name: Initiate roles playbook
+  tower_job_launch:
+    validate_certs: no
+    tower_host: "{{ lookup('env', 'TOWER_HOST') or xyz_vmware_vm_provision_tower_host }}"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') or xyz_vmware_vm_provision_tower_username }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') or xyz_vmware_vm_provision_tower_password }}"
+    job_template: "{{ 'Server - Roles - Windows' if new_vm_info['instance']['hw_guest_id']|regex_search('windows') else 'Server - Roles - Linux' }}"
+    limit: "{{ new_vm_info['instance']['hw_name'] }}"
+  when: not xyz_vmware_vm_destroy | bool
+  register: job_launch
+
+- name: Wait for job to complete
+  tower_job_wait:
+    job_id: "{{ job_launch['id'] }}"
+    timeout: 1800
+  when: job_launch['id'] is defined

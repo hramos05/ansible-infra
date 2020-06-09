@@ -1,0 +1,50 @@
+---
+- name: Run build
+  block:
+    - name: Include Windows vars
+      include_vars:
+        file: vars/windows.yml
+
+    - name: Create build directory
+      tempfile:
+        state: "directory"
+        prefix: "ansible.build."
+      register: build_dir
+
+    - name: Copy scripts
+      copy:
+        src: "files/windows/"
+        dest: "{{ build_dir['path'] }}/scripts"
+
+    - name:  Transform autounattend.xml
+      template:
+        src: "windows/windows-autounattend.xml.j2"
+        dest: "{{ build_dir['path'] }}/autounattend.xml"
+        variable_start_string: "<<"
+        variable_end_string: ">>"
+
+    - name: Transform build.json
+      template:
+        src: "windows/windows.json.j2"
+        dest: "{{ build_dir['path'] }}/build.json"
+        variable_start_string: "<<"
+        variable_end_string: ">>"
+
+    - name: Run packer build (force)
+      command: "packer build -force ./build.json"
+      args:
+        chdir: "{{ build_dir['path'] }}"
+      when: xyz_vmware_vm_templates_force | bool
+
+    - name: Run packer build
+      command: "packer build ./build.json"
+      args:
+        chdir: "{{ build_dir['path'] }}"
+      when: not xyz_vmware_vm_templates_force | bool
+
+  always:
+    - name: Remove build directory
+      file:
+        path: "{{ build_dir['path'] }}"
+        state: absent
+      when: build_dir['path'] is defined

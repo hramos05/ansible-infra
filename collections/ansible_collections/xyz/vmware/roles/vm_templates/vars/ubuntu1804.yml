@@ -1,0 +1,4 @@
+---
+xyz_vmware_vm_templates_guest_id: "ubuntu64Guest"
+xyz_vmware_vm_templates_iso_path1: "[NFS-Content] ISO/Linux/ubuntu-18.04.4-server-amd64.iso"
+xyz_vmware_vm_templates_iso_path2: ""

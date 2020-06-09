@@ -1,0 +1,89 @@
+{
+  "variables": {
+    "vcenter_server": "{% if lookup('env','VMWARE_HOST')|length %}<< lookup('env','VMWARE_HOST') >>{% else %}<< xyz_vmware_vm_templates_vcenter_server >>{% endif %}",
+    "vcenter_username": "{% if lookup('env','VMWARE_USER')|length %}<< lookup('env','VMWARE_USER') >>{% else %}<< xyz_vmware_vm_templates_vcenter_user >>{% endif %}",
+    "vcenter_password": "{% if lookup('env','VMWARE_PASSWORD')|length %}<< lookup('env','VMWARE_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_vcenter_pass>>{% endif %}",
+    "vcenter_datastore": "<< xyz_vmware_vm_templates_datastore >>",
+    "vcenter_folder": "<< xyz_vmware_vm_templates_folder >>",
+    "vcenter_cluster": "<< xyz_vmware_vm_templates_cluster >>",
+    "vcenter_network": "<< xyz_vmware_vm_templates_vlan >>",
+    "vm_name": "T-<< xyz_vmware_vm_templates_image >><< xyz_vmware_vm_templates_image_suffix >>-<< timestamp >>",
+    "vm_cpu": "<< xyz_vmware_vm_templates_num_cpus >>",
+    "vm_ram": "<< xyz_vmware_vm_templates_memory_mb >>",
+    "vm_disk_controller_type": "<< xyz_vmware_vm_templates_disk_controller_type >>",
+    "vm_disk_size": "<< xyz_vmware_vm_templates_disk_os_size_mb >>",
+    "vm_iso_path1": "<< xyz_vmware_vm_templates_iso_path1 >>",
+    "vm_iso_path2": "<< xyz_vmware_vm_templates_iso_path2 >>",
+    "ssh_username": "{% if lookup('env','VAGRANT_USER')|length %}<< lookup('env','VAGRANT_USER') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_username >>{% endif %}",
+    "ssh_password": "{% if lookup('env','VAGRANT_PASSWORD')|length %}<< lookup('env','VAGRANT_PASSWORD') >>{% else %}<< xyz_vmware_vm_templates_local_vagrant_password >>{% endif %}",
+    "vm_guest_id": "<< xyz_vmware_vm_templates_guest_id >>"
+  },
+  "sensitive-variables": [
+    "vcenter_password",
+    "ssh_password"
+  ],
+  "builders": [
+    {
+      "type": "vsphere-iso",
+      "vcenter_server": "{{ user `vcenter_server` }}",
+      "username": "{{ user `vcenter_username` }}",
+      "password": "{{ user `vcenter_password` }}",
+      "insecure_connection": "true",
+      "datastore": "{{ user `vcenter_datastore` }}",
+      "folder": "{{ user `vcenter_folder` }}",
+      "convert_to_template": "true",
+      "cluster": "{{ user `vcenter_cluster` }}",
+      "network": "{{ user `vcenter_network` }}",
+      "boot_order": "disk,cdrom",
+      "guest_os_type": "{{ user `vm_guest_id` }}",
+      "vm_name": "{{ user `vm_name` }}",
+      "cpus": "{{ user `vm_cpu` }}",
+      "ram": "{{ user `vm_ram` }}",
+      "ram_reserve_all": false,
+      "disk_controller_type": "{{ user `vm_disk_controller_type` }}",
+      "disk_size": "{{ user `vm_disk_size` }}",
+      "disk_thin_provisioned": true,
+      "network_card": "vmxnet3",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "notes": "Template: {{ user `vm_name` }}",
+      "iso_paths": [
+        "{{ user `vm_iso_path1` }}"
+        {%- if xyz_vmware_vm_templates_iso_path2|length -%}
+        ,
+        "{{ user `vm_iso_path2` }}"
+        {% endif %}
+
+      ],
+      "floppy_files": [
+        "preseed.cfg"
+      ],
+      "boot_command": [
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
+        "/install/vmlinuz",
+        " initrd=/install/initrd.gz",
+        " auto-install/enable=true",
+        " priority=critical",
+        " locale=en_US",
+        " file=/media/preseed.cfg",
+        " -- <wait>",
+        "<enter><wait>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/configure.sh"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "echo '{{ isotime \"2006-01-02 03:04:05 PM\" }} UTC: Template Build Complete'"
+      ]
+    }
+  ]
+}

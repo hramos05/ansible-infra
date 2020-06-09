@@ -1,0 +1,15 @@
+---
+- name: "Apply Roles"
+  hosts: all
+  gather_facts: true
+
+  collections:
+    - xyz.apps
+
+  tasks:
+    - name: Roles from host var
+      include_role:
+        name: "{{ role_input }}"
+      loop: "{{ assigned_roles }}"
+      loop_control:
+        loop_var: role_input

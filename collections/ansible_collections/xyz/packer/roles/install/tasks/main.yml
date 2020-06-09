@@ -1,0 +1,20 @@
+---
+- name: Install unzip
+  package:
+    name: unzip
+    state: present
+
+- name: Download and unarchive packer
+  unarchive:
+    src: https://releases.hashicorp.com/packer/{{ xyz_packer_install_version }}/packer_{{ xyz_packer_install_version }}_linux_{{ xyz_packer_install_arch }}.zip
+    dest: "{{ xyz_packer_install_bin_path }}"
+    remote_src: true
+    creates: "{{ xyz_packer_install_bin_path }}/packer"
+
+- name: Download and unarchive packer
+  unarchive:
+    src: "{{ xyz_packer_install_windows_update_provisioner }}"
+    dest: "{{ xyz_packer_install_bin_path }}"
+    remote_src: true
+    creates: "{{ xyz_packer_install_bin_path }}/packer-provisioner-windows-update"
+    mode: 0755

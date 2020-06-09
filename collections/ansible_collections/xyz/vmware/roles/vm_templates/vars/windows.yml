@@ -1,0 +1,10 @@
+---
+xyz_vmware_vm_templates_windows_server_edition: "SERVERDATACENTERCORE"
+xyz_vmware_vm_templates_windows_local_admin_password: "CHANGEME"
+xyz_vmware_vm_templates_windows_local_vagrant_username: "vagrant"
+xyz_vmware_vm_templates_windows_local_vagrant_password: "CHANGEME"
+xyz_vmware_vm_templates_windows_server_info_path: "HKLM:\\SOFTWARE\\XYZ\\TemplateInfo"
+xyz_vmware_vm_templates_windows_product_key: "WMDGN-G9PQG-XVVXX-R3X43-63DFG"
+xyz_vmware_vm_templates_guest_id: "windows2019srv_64Guest"
+xyz_vmware_vm_templates_iso_path1: "[NFS-Content] ISO/Windows/2019.iso"
+xyz_vmware_vm_templates_iso_path2: ""

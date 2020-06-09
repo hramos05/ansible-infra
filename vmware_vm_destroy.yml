@@ -1,0 +1,13 @@
+---
+- name: "Destroy temporary VMs"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+
+  collections:
+    - xyz.awx
+    - xyz.vmware
+
+  roles:
+    - xyz.awx.tower_cli
+    - xyz.vmware.vm_destroy

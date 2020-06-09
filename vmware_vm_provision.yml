@@ -1,0 +1,13 @@
+---
+- name: "Provision VM from template"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+
+  collections:
+    - name: xyz.vmware
+    - name: xyz.awx
+
+  roles:
+    - name: xyz.awx.tower_cli
+    - name: xyz.vmware.vm_provision
