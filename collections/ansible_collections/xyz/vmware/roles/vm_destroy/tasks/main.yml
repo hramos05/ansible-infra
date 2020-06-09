@@ -23,7 +23,6 @@
     state: "{{ xyz_vmware_vm_state }}"
     force: "{{ xyz_vmware_vm_force }}"
   delegate_to: localhost
-  when: not xyz_vmware_vm_destroy | bool
   with_items:
     - "{{ vm_info['virtual_machines'] }}"
 
@@ -37,7 +36,6 @@
     inventory: "{{ 'Windows' if item['guest_fullname']|regex_search('Windows') else 'Linux' }}"
     state: absent
   delegate_to: localhost
-  when: not xyz_vmware_vm_destroy | bool
   with_items:
     - "{{ vm_info['virtual_machines'] }}"
 

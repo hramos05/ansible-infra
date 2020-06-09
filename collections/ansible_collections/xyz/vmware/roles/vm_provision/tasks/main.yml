@@ -98,6 +98,10 @@
     timeout: 1800
   when: job_launch['id'] is defined
 
+- name: Wait for x seconds
+  pause:
+    seconds: {{ 10 | random(start=2) }}
+
 - name: Delete host from Build In-Progress inventory
   tower_host:
     validate_certs: no
