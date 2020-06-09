@@ -47,7 +47,7 @@ xyz_awx_update_survey_vm_template_values_prompt:
   - question_name: 'Roles'
     question_description: ''
     required: true
-    type: 'multiplechoice'
+    type: 'multiselect'
     variable: 'xyz_vmware_vm_provision_roles'
     min: 'null'
     max: 'null'
