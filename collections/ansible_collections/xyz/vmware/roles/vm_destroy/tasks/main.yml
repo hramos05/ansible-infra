@@ -26,7 +26,7 @@
   with_items:
     - "{{ vm_info['virtual_machines'] }}"
 
-- name: Delete host from windows/linux inventory
+- name: Delete host from inventory
   tower_host:
     validate_certs: no
     tower_host: "{{ lookup('env', 'TOWER_HOST') or xyz_vmware_vm_provision_tower_host }}"
