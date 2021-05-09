@@ -25,8 +25,8 @@ python38-requests
 # upgrade pip
 RUN /usr/bin/python3 -m pip install --upgrade pip
 
-# install python stuff
-RUN pip install -r requirements.txt
+# install pywinrm
+RUN pip install pywinrm==0.4.1
 
 # add Kerberos conf
 COPY krb5.conf /etc/krb5.conf
