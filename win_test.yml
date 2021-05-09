@@ -1,14 +1,4 @@
 ---
-- name: "Install required libraries"
-  hosts: localhost
-  gather_facts: false
-  connection: local
-
-  tasks:
-    - name: Install pywinrm
-      pip:
-        name: pywinrm
-
 - name: "Windows Connection Test"
   hosts: all
   gather_facts: true
